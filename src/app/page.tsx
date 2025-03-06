@@ -1,4 +1,4 @@
-import PokemonDeckBuilder from "@/components/pokemon-deck-builder"
+import PokemonDeckBuilder from "@/src/components/pokemon-deck-builder"
 
 export default function Home() {
   return (

@@ -10,6 +10,9 @@ import {
   useSensor,
   useSensors,
   useDroppable,
+  type DragStartEvent,
+  type DragEndEvent,
+  type DragOverEvent,
 } from "@dnd-kit/core"
 import {
   arrayMove,
@@ -19,15 +22,16 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { restrictToWindowEdges } from "@dnd-kit/modifiers"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/src/components/ui/card"
+import { Button } from "@/src/components/ui/button"
 import { Plus } from "lucide-react"
-import { SortableDeck } from "@/components/sortable-deck"
-import { SortableCard } from "@/components/sortable-card"
-import { PokemonCard } from "@/components/pokemon-card"
+import { SortableDeck } from "@/src/components/sortable-deck"
+import { SortableCard } from "@/src/components/sortable-card"
+import { PokemonCard } from "@/src/components/pokemon-card"
+import type { DeckType, PokemonCardType } from "@/types"
 
 // Mock Pokemon card data
-const pokemonCards = [
+const pokemonCards: PokemonCardType[] = [
   { id: "1", name: "Pikachu", type: "Electric", hp: 60, image: "/placeholder.svg?height=200&width=150" },
   { id: "2", name: "Charizard", type: "Fire", hp: 120, image: "/placeholder.svg?height=200&width=150" },
   { id: "3", name: "Bulbasaur", type: "Grass", hp: 60, image: "/placeholder.svg?height=200&width=150" },
@@ -49,13 +53,13 @@ const pokemonCards = [
 const COLLECTION_ID = "available-cards-collection"
 
 export default function PokemonDeckBuilder() {
-  const [decks, setDecks] = useState([
+  const [decks, setDecks] = useState<DeckType[]>([
     { id: "deck-1", name: "Deck 1", cards: [] },
     { id: "deck-2", name: "Deck 2", cards: [] },
   ])
-  const [availableCards, setAvailableCards] = useState(pokemonCards)
-  const [activeId, setActiveId] = useState(null)
-  const [activeCard, setActiveCard] = useState(null)
+  const [availableCards, setAvailableCards] = useState<PokemonCardType[]>(pokemonCards)
+  const [activeId, setActiveId] = useState<string | null>(null)
+  const [activeCard, setActiveCard] = useState<PokemonCardType | null>(null)
 
   // Set up the collection area as a droppable zone
   const { setNodeRef: setCollectionRef, isOver: isOverCollection } = useDroppable({
@@ -74,9 +78,9 @@ export default function PokemonDeckBuilder() {
     }),
   )
 
-  const handleDragStart = (event) => {
+  const handleDragStart = (event: DragStartEvent) => {
     const { active } = event
-    setActiveId(active.id)
+    setActiveId(active.id.toString())
 
     // Find if it's a card being dragged
     const draggedCard = [...availableCards, ...decks.flatMap((deck) => deck.cards)].find(
@@ -87,7 +91,7 @@ export default function PokemonDeckBuilder() {
     }
   }
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
     setActiveId(null)
     setActiveCard(null)
@@ -96,7 +100,7 @@ export default function PokemonDeckBuilder() {
 
     // Handle dropping a card back to the collection
     if (over.id === COLLECTION_ID) {
-      const cardId = active.id
+      const cardId = active.id.toString()
 
       // Find which deck the card is in
       const sourceDeckIndex = decks.findIndex((deck) => deck.cards.some((card) => card.id === cardId))
@@ -105,21 +109,23 @@ export default function PokemonDeckBuilder() {
         const sourceDeck = decks[sourceDeckIndex]
         const card = sourceDeck.cards.find((card) => card.id === cardId)
 
-        // Remove card from deck
-        setDecks(
-          decks.map((deck, index) => {
-            if (index === sourceDeckIndex) {
-              return {
-                ...deck,
-                cards: deck.cards.filter((c) => c.id !== cardId),
+        if (card) {
+          // Remove card from deck
+          setDecks(
+            decks.map((deck, index) => {
+              if (index === sourceDeckIndex) {
+                return {
+                  ...deck,
+                  cards: deck.cards.filter((c) => c.id !== cardId),
+                }
               }
-            }
-            return deck
-          }),
-        )
+              return deck
+            }),
+          )
 
-        // Add card back to collection
-        setAvailableCards([...availableCards, card])
+          // Add card back to collection
+          setAvailableCards([...availableCards, card])
+        }
         return
       }
     }
@@ -139,8 +145,8 @@ export default function PokemonDeckBuilder() {
     const isDeckTarget = over.id.toString().startsWith("deck-")
 
     if (isDeckTarget) {
-      const targetDeckId = over.id
-      const cardId = active.id
+      const targetDeckId = over.id.toString()
+      const cardId = active.id.toString()
 
       // Check if card is from available cards
       const cardFromAvailable = availableCards.find((card) => card.id === cardId)
@@ -162,18 +168,20 @@ export default function PokemonDeckBuilder() {
       if (sourceDeck && sourceDeck.id !== targetDeckId) {
         const card = sourceDeck.cards.find((card) => card.id === cardId)
 
-        // Move from one deck to another
-        setDecks(
-          decks.map((deck) => {
-            if (deck.id === sourceDeck.id) {
-              return { ...deck, cards: deck.cards.filter((c) => c.id !== cardId) }
-            }
-            if (deck.id === targetDeckId) {
-              return { ...deck, cards: [...deck.cards, card] }
-            }
-            return deck
-          }),
-        )
+        if (card) {
+          // Move from one deck to another
+          setDecks(
+            decks.map((deck) => {
+              if (deck.id === sourceDeck.id) {
+                return { ...deck, cards: deck.cards.filter((c) => c.id !== cardId) }
+              }
+              if (deck.id === targetDeckId) {
+                return { ...deck, cards: [...deck.cards, card] }
+              }
+              return deck
+            }),
+          )
+        }
       }
     }
 
@@ -201,7 +209,7 @@ export default function PokemonDeckBuilder() {
     }
   }
 
-  const handleDragOver = (event) => {
+  const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event
 
     if (!over) return
@@ -209,8 +217,8 @@ export default function PokemonDeckBuilder() {
     // Handle card sorting within a deck
     if (active.id !== over.id) {
       // Get the deck IDs from the data attributes
-      const activeData = active.data.current
-      const overData = over.data.current
+      const activeData = active.data.current as { type?: string; deckId?: string } | undefined
+      const overData = over.data.current as { type?: string; deckId?: string } | undefined
 
       // Check if both items are cards and in the same deck
       if (
@@ -251,7 +259,7 @@ export default function PokemonDeckBuilder() {
     setDecks([...decks, { id: newDeckId, name: `Deck ${decks.length + 1}`, cards: [] }])
   }
 
-  const returnCardToAvailable = (cardId, deckId) => {
+  const returnCardToAvailable = (cardId: string, deckId: string) => {
     const deckIndex = decks.findIndex((deck) => deck.id === deckId)
 
     // Make sure the deck exists

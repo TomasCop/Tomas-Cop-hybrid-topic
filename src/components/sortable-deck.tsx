@@ -2,14 +2,15 @@
 
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card"
 import { SortableContext, horizontalListSortingStrategy } from "@dnd-kit/sortable"
-import { SortableCard } from "@/components/sortable-card"
+import { SortableCard } from "@/src/components/sortable-card"
 import { GripVertical, ChevronDown, ChevronUp } from "lucide-react"
 import { useState } from "react"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/src/components/ui/badge"
+import type { SortableDeckProps } from "@/types"
 
-export function SortableDeck({ deck, returnCardToAvailable }) {
+export function SortableDeck({ deck, returnCardToAvailable }: SortableDeckProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: deck.id })
@@ -35,6 +36,7 @@ export function SortableDeck({ deck, returnCardToAvailable }) {
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="p-1 rounded-full hover:bg-purple-100 transition-colors"
+          type="button"
         >
           {isCollapsed ? (
             <ChevronDown className="h-5 w-5 text-purple-500" />

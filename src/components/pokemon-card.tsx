@@ -1,7 +1,8 @@
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/src/components/ui/badge"
 import Image from "next/image"
+import type { PokemonCardProps } from "@/types"
 
-const typeColors = {
+const typeColors: Record<string, { bg: string; text: string; border: string }> = {
   Fire: {
     bg: "bg-gradient-to-br from-red-500 to-orange-500",
     text: "text-white",
@@ -94,7 +95,7 @@ const typeColors = {
   },
 }
 
-export function PokemonCard({ card }) {
+export function PokemonCard({ card }: PokemonCardProps) {
   const typeStyle = typeColors[card.type] || {
     bg: "bg-gradient-to-br from-gray-500 to-gray-600",
     text: "text-white",
