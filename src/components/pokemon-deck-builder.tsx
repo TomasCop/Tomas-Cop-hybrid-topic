@@ -32,7 +32,7 @@ import type { DeckType, PokemonCardType } from "@/types"
 
 // Mock Pokemon card data
 const pokemonCards: PokemonCardType[] = [
-  { id: "1", name: "Pikachu", type: "Electric", hp: 60, image: "/placeholder.svg?height=200&width=150" },
+  { id: "1", name: "Pikachu", type: "Electric", hp: 60, image: "/img/placeholder.svg?height=200&width=150" },
   { id: "2", name: "Charizard", type: "Fire", hp: 120, image: "/placeholder.svg?height=200&width=150" },
   { id: "3", name: "Bulbasaur", type: "Grass", hp: 60, image: "/placeholder.svg?height=200&width=150" },
   { id: "4", name: "Squirtle", type: "Water", hp: 50, image: "/placeholder.svg?height=200&width=150" },
@@ -185,7 +185,7 @@ export default function PokemonDeckBuilder() {
       }
     }
 
-    // Handle card reordering within the same deck
+
     if (!isDeckTarget && active.data?.current?.deckId && over.data?.current?.deckId) {
       const activeDeckId = active.data.current.deckId
       const overDeckId = over.data.current.deckId
@@ -214,13 +214,13 @@ export default function PokemonDeckBuilder() {
 
     if (!over) return
 
-    // Handle card sorting within a deck
+
     if (active.id !== over.id) {
       // Get the deck IDs from the data attributes
       const activeData = active.data.current as { type?: string; deckId?: string } | undefined
       const overData = over.data.current as { type?: string; deckId?: string } | undefined
 
-      // Check if both items are cards and in the same deck
+
       if (
         activeData?.type === "card" &&
         overData?.type === "card" &&
@@ -236,7 +236,6 @@ export default function PokemonDeckBuilder() {
           const overIndex = decks[deckIndex].cards.findIndex((card) => card.id === over.id)
 
           if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-            // Create a new array with the updated order
             setDecks(
               decks.map((deck, index) => {
                 if (index === deckIndex) {
