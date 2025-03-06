@@ -32,24 +32,114 @@ import type { DeckType, PokemonCardType } from "@/types"
 
 // Mock Pokemon card data
 const pokemonCards: PokemonCardType[] = [
-  { id: "1", name: "Pikachu", type: "Electric", hp: 60, image: "/img/placeholder.svg?height=200&width=150" },
-  { id: "2", name: "Charizard", type: "Fire", hp: 120, image: "/placeholder.svg?height=200&width=150" },
-  { id: "3", name: "Bulbasaur", type: "Grass", hp: 60, image: "/placeholder.svg?height=200&width=150" },
-  { id: "4", name: "Squirtle", type: "Water", hp: 50, image: "/placeholder.svg?height=200&width=150" },
-  { id: "5", name: "Jigglypuff", type: "Fairy", hp: 70, image: "/placeholder.svg?height=200&width=150" },
-  { id: "6", name: "Mewtwo", type: "Psychic", hp: 150, image: "/placeholder.svg?height=200&width=150" },
-  { id: "7", name: "Gengar", type: "Ghost", hp: 100, image: "/placeholder.svg?height=200&width=150" },
-  { id: "8", name: "Eevee", type: "Normal", hp: 50, image: "/placeholder.svg?height=200&width=150" },
-  { id: "9", name: "Snorlax", type: "Normal", hp: 140, image: "/placeholder.svg?height=200&width=150" },
-  { id: "10", name: "Gyarados", type: "Water", hp: 130, image: "/placeholder.svg?height=200&width=150" },
-  { id: "11", name: "Dragonite", type: "Dragon", hp: 120, image: "/placeholder.svg?height=200&width=150" },
-  { id: "12", name: "Machamp", type: "Fighting", hp: 110, image: "/placeholder.svg?height=200&width=150" },
-  { id: "13", name: "Alakazam", type: "Psychic", hp: 90, image: "/placeholder.svg?height=200&width=150" },
-  { id: "14", name: "Arcanine", type: "Fire", hp: 100, image: "/placeholder.svg?height=200&width=150" },
-  { id: "15", name: "Lapras", type: "Water", hp: 120, image: "/placeholder.svg?height=200&width=150" },
+  {
+    id: "1",
+    name: "Pikachu",
+    type: "Electric",
+    hp: 60,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+  },
+  {
+    id: "2",
+    name: "Charizard",
+    type: "Fire",
+    hp: 120,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
+  },
+  {
+    id: "3",
+    name: "Bulbasaur",
+    type: "Grass",
+    hp: 60,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+  },
+  {
+    id: "4",
+    name: "Squirtle",
+    type: "Water",
+    hp: 50,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png",
+  },
+  {
+    id: "5",
+    name: "Jigglypuff",
+    type: "Fairy",
+    hp: 70,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png",
+  },
+  {
+    id: "6",
+    name: "Mewtwo",
+    type: "Psychic",
+    hp: 150,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png",
+  },
+  {
+    id: "7",
+    name: "Gengar",
+    type: "Ghost",
+    hp: 100,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png",
+  },
+  {
+    id: "8",
+    name: "Eevee",
+    type: "Normal",
+    hp: 50,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
+  },
+  {
+    id: "9",
+    name: "Snorlax",
+    type: "Normal",
+    hp: 140,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png",
+  },
+  {
+    id: "10",
+    name: "Gyarados",
+    type: "Water",
+    hp: 130,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/130.png",
+  },
+  {
+    id: "11",
+    name: "Dragonite",
+    type: "Dragon",
+    hp: 120,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png",
+  },
+  {
+    id: "12",
+    name: "Machamp",
+    type: "Fighting",
+    hp: 110,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/68.png",
+  },
+  {
+    id: "13",
+    name: "Alakazam",
+    type: "Psychic",
+    hp: 90,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/65.png",
+  },
+  {
+    id: "14",
+    name: "Arcanine",
+    type: "Fire",
+    hp: 100,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/59.png",
+  },
+  {
+    id: "15",
+    name: "Lapras",
+    type: "Water",
+    hp: 120,
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/131.png",
+  },
 ]
 
-// Unique ID for the collection drop area
+
 const COLLECTION_ID = "available-cards-collection"
 
 export default function PokemonDeckBuilder() {
@@ -68,9 +158,8 @@ export default function PokemonDeckBuilder() {
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      // Decrease the activation constraint for better responsiveness
       activationConstraint: {
-        distance: 5, // 5px of movement before drag starts
+        distance: 5,
       },
     }),
     useSensor(KeyboardSensor, {

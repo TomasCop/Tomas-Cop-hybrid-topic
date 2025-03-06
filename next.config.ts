@@ -2,7 +2,7 @@ import { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
     images: {
-        domains: ['images.pokemontcg.io'],
+        domains: ['raw.githubusercontent.com'],
     },
 };
 
